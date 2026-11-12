@@ -16,6 +16,8 @@
   font-family: var(--fb); line-height: 1.4; text-align: left;
   -webkit-font-smoothing: antialiased;
 }
+/* English: Latin-first body text (CJK fonts draw curly quotes full-width); styles below still win */
+:where(:lang(en)) .slide { --fb: "Bricolage Grotesque", "Noto Sans SC", sans-serif; }
 .slide *, .slide *::before, .slide *::after { box-sizing: border-box; }
 .slide .bgp, .slide .decor, .slide .stks, .slide .content { position: absolute; inset: 0; }
 .slide .bgp { z-index: 0; }

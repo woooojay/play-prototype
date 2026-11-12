@@ -6,12 +6,14 @@
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = P.esc;
+  const t = P.t;
+  const nm = P.nm;
   const clone = o => JSON.parse(JSON.stringify(o));
   const pick = a => a[Math.floor(Math.random() * a.length)];
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const center = el => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; };
-  const toEl = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstElementChild; };
+  const toEl = html => { const tpl = document.createElement('template'); tpl.innerHTML = html.trim(); return tpl.content.firstElementChild; };
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const icon = (d, s = 18) => `<svg class="ico" viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
@@ -32,16 +34,17 @@
   $('#nextBtn').innerHTML = ICON.right;
 
   /* ---------------- state ---------------- */
-  const themeOf = id => P.THEMES.find(t => t.id === id) || P.THEMES[0];
+  const themeOf = id => P.THEMES.find(x => x.id === id) || P.THEMES[0];
   const paletteOf = id => state.extra.concat(P.PALETTES).find(p => p.id === id);
   const bgOf = id => P.BGS.find(b => b.id === id) || P.BGS[0];
   const stickerOf = id => P.STICKERS.find(s => s.id === id);
-  const tplOf = id => P.TEMPLATES.find(t => t.id === id);
+  const tplOf = id => P.TEMPLATES.find(x => x.id === id);
 
   const state = {
-    deck: clone(P.DEMO),
-    deckV: 0, // bumps whenever a new deck is generated
+    deck: clone(P.demo()),
+    deckV: 0, // bumps whenever the deck changes
     source: 'demo', // demo | upload | template
+    tplId: null, // which template, so a language switch can swap its text
     theme: 'bauhaus',
     palette: null, // null = the style's own colours
     bg: 'none',
@@ -63,9 +66,9 @@
   const baseOpts = i => ({ theme: state.theme, colors: colors(), bg: state.bg, stickers: state.stickers[i] || [] });
   const lockMini = `<div class="lock">${ICON.lock}</div>`;
   const lockFull = i =>
-    `<div class="lock"><div class="lock-card">${ICON.lockLg}<b>第 ${i + 1} 页已经做好了</b>` +
-    `<span>免费注册，看完全部 ${total()} 页，还能导出 PPTX</span>` +
-    `<button class="btn btn-primary btn-sm" data-open="unlock">免费解锁剩下 ${lockedCount()} 页</button></div></div>`;
+    `<div class="lock"><div class="lock-card">${ICON.lockLg}<b>${t('lock.title', i + 1)}</b>` +
+    `<span>${t('lock.text', total())}</span>` +
+    `<button class="btn btn-primary btn-sm" data-open="unlock">${t('lock.btn', lockedCount())}</button></div></div>`;
 
   /* ---------------- stage ---------------- */
   const stage = $('#stage');
@@ -74,6 +77,7 @@
   function renderStage(fx) {
     const i = state.cur;
     const el = toEl(`<div class="stage-slide">${P.slideHTML(state.deck.slides[i], i, total(), { ...baseOpts(i), locked: isLocked(i), lockHTML: lockFull(i), interactive: true })}</div>`);
+    $$('.stk-x', el).forEach(b => b.setAttribute('aria-label', t('stk.remove')));
     const olds = $$('.stage-slide', stage);
     stage.append(el);
     $('#prevBtn').disabled = i === 0;
@@ -109,7 +113,7 @@
     const film = $('#film');
     film.innerHTML = state.deck.slides
       .map((s, i) =>
-        `<button class="film-item${i === state.cur ? ' on' : ''}" data-i="${i}" style="--k:${i}" aria-label="第 ${i + 1} 页${isLocked(i) ? '（注册后解锁）' : ''}"${i === state.cur ? ' aria-current="true"' : ''}>` +
+        `<button class="film-item${i === state.cur ? ' on' : ''}" data-i="${i}" style="--k:${i}" aria-label="${t('film.page', i + 1, isLocked(i))}"${i === state.cur ? ' aria-current="true"' : ''}>` +
         P.slideHTML(s, i, total(), { ...baseOpts(i), locked: isLocked(i), lockHTML: lockMini }) +
         `<span class="film-no">${i + 1}</span></button>`)
       .join('');
@@ -123,26 +127,25 @@
   function renderDock() {
     const dock = $('#dock');
     dock.innerHTML =
-      `<button class="pill pill-ap${state.autoplay ? ' on' : ''}" id="apBtn" aria-pressed="${state.autoplay}"><span class="eq"><i></i><i></i><i></i></span>${state.autoplay ? '自动换装中' : '自动换装'}</button>` +
-      P.THEMES.map(t =>
-        `<button class="pill${t.id === state.theme ? ' on' : ''}" data-theme="${t.id}" aria-pressed="${t.id === state.theme}">` +
-        `<span class="sw"><i style="background:${t.colors.bg}"></i><i style="background:${t.colors.a1}"></i><i style="background:${t.colors.a2}"></i></span>${t.name}</button>`).join('');
+      `<button class="pill pill-ap${state.autoplay ? ' on' : ''}" id="apBtn" aria-pressed="${state.autoplay}"><span class="eq"><i></i><i></i><i></i></span>${state.autoplay ? t('dock.on') : t('dock.off')}</button>` +
+      P.THEMES.map(th =>
+        `<button class="pill${th.id === state.theme ? ' on' : ''}" data-theme="${th.id}" aria-pressed="${th.id === state.theme}">` +
+        `<span class="sw"><i style="background:${th.colors.bg}"></i><i style="background:${th.colors.a1}"></i><i style="background:${th.colors.a2}"></i></span>${nm(th)}</button>`).join('');
     scrollIntoRow(dock, $('.pill.on[data-theme]', dock));
   }
 
   function renderInfo() {
-    const src = { demo: '示例', upload: '你的 PPT', template: '模板' }[state.source];
     const lc = lockedCount();
     $('#deckInfo').innerHTML =
-      `<span class="src src-${state.source}">${src}</span><b title="${esc(state.deck.title)}">${esc(state.deck.title)}</b>` +
+      `<span class="src src-${state.source}">${t('src.' + state.source)}</span><b title="${esc(state.deck.title)}">${esc(state.deck.title)}</b>` +
       `<span class="pg">${state.cur + 1} / ${total()}</span>` +
-      (lc ? `<button class="free-badge" data-open="unlock" aria-label="已免费预览 ${P.FREE_PAGES} 页，注册解锁全部 ${total()} 页">${ICON.lock}免费看了 ${P.FREE_PAGES} 页 · 解锁</button>` : '');
-    const parts = [`风格 <b>${themeOf(state.theme).name}</b>`];
-    if (state.palette) parts.push(`配色 <b>${esc(state.palette.name)}</b> <button data-clear="palette" aria-label="清除配色">×</button>`);
-    if (state.bg !== 'none') parts.push(`背景 <b>${bgOf(state.bg).name}</b> <button data-clear="bg" aria-label="清除背景">×</button>`);
+      (lc ? `<button class="free-badge" data-open="unlock" aria-label="${t('badge.aria', P.FREE_PAGES, total())}">${ICON.lock}${t('badge', P.FREE_PAGES)}</button>` : '');
+    const parts = [`${t('combo.style')} <b>${nm(themeOf(state.theme))}</b>`];
+    if (state.palette) parts.push(`${t('combo.palette')} <b>${esc(nm(state.palette))}</b> <button data-clear="palette" aria-label="${t('combo.clearPalette')}">×</button>`);
+    if (state.bg !== 'none') parts.push(`${t('combo.bg')} <b>${nm(bgOf(state.bg))}</b> <button data-clear="bg" aria-label="${t('combo.clearBg')}">×</button>`);
     const n = (state.stickers[state.cur] || []).length;
-    if (n) parts.push(`贴纸 <b>${n}</b> <button data-clear="stickers" aria-label="清除这一页的贴纸">×</button>`);
-    $('#combo').innerHTML = `<span>当前组合</span>${parts.join('<span>·</span>')}<span class="keys">← → 翻页 · 贴纸可拖动</span>`;
+    if (n) parts.push(`${t('combo.stickers')} <b>${n}</b> <button data-clear="stickers" aria-label="${t('combo.clearStickers')}">×</button>`);
+    $('#combo').innerHTML = `<span>${t('combo.now')}</span>${parts.join('<span>·</span>')}<span class="keys">${t('combo.keys')}</span>`;
   }
 
   function update(o = {}) {
@@ -208,7 +211,7 @@
     renderDock();
     apTimer = setInterval(() => {
       if (!heroOn || document.hidden || openModalId) return;
-      const k = P.THEMES.findIndex(t => t.id === state.theme);
+      const k = P.THEMES.findIndex(x => x.id === state.theme);
       const next = P.THEMES[(k + 1) % P.THEMES.length];
       if (k + 1 >= P.THEMES.length && state.source === 'demo') state.cur = (state.cur + 1) % total();
       const pill = $(`#dock [data-theme="${next.id}"]`);
@@ -251,22 +254,23 @@
     const data = `data-kind="${c.kind}" data-id="${c.id}"`;
     if (c.kind === 'palette') {
       const p = paletteOf(c.id);
-      return `<button class="chip chip-pal" ${data} style="${pos}" aria-label="配色：${p.name}"><span class="dots">${[p.bg, p.a1, p.a2, p.a3].map(x => `<i style="background:${x}"></i>`).join('')}</span>${p.name}</button>`;
+      return `<button class="chip chip-pal" ${data} style="${pos}" aria-label="${t('chip.palette', nm(p))}"><span class="dots">${[p.bg, p.a1, p.a2, p.a3].map(x => `<i style="background:${x}"></i>`).join('')}</span>${nm(p)}</button>`;
     }
     if (c.kind === 'bg') {
       const b = bgOf(c.id);
-      return `<button class="chip chip-bg" ${data} style="${pos}" aria-label="背景：${b.name}"><span class="sf"><span class="slide" style="${P.vars(BRANDC)}"><span class="bgp bgp-${b.id}"></span></span></span>${b.name}</button>`;
+      return `<button class="chip chip-bg" ${data} style="${pos}" aria-label="${t('chip.bg', nm(b))}"><span class="sf"><span class="slide" style="${P.vars(BRANDC)}"><span class="bgp bgp-${b.id}"></span></span></span>${nm(b)}</button>`;
     }
     const s = stickerOf(c.id);
-    return `<button class="chip chip-stk" ${data} style="${pos}color:${STK_COLORS[k % STK_COLORS.length]}" aria-label="贴纸：${s.name}">${P.stickerSVG(s)}</button>`;
+    return `<button class="chip chip-stk" ${data} style="${pos}color:${STK_COLORS[k % STK_COLORS.length]}" aria-label="${t('chip.sticker', nm(s))}">${P.stickerSVG(s)}</button>`;
   }
 
   function renderChips() {
+    const hintGone = $('#chipHint') && $('#chipHint').classList.contains('gone');
     $('#chipsL').innerHTML =
-      `<div class="chip-hint" id="chipHint">拖到幻灯片上<svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 6C14 2 30 4 38 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M30 20l8 4 2-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` +
+      `<div class="chip-hint${hintGone ? ' gone' : ''}" id="chipHint">${t('chip.hint')}<svg viewBox="0 0 44 30" aria-hidden="true"><path d="M2 6C14 2 30 4 38 22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/><path d="M30 20l8 4 2-9" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>` +
       CHIPS.L.map((c, k) => chipHTML(c, k, 'L')).join('');
     $('#chipsR').innerHTML = CHIPS.R.map((c, k) => chipHTML(c, k, 'R')).join('');
-    $('#chipsM').innerHTML = `<span class="chips-m-label">试试 →</span>` + CHIPS.L.concat(CHIPS.R).map((c, k) => chipHTML(c, k)).join('');
+    $('#chipsM').innerHTML = `<span class="chips-m-label">${t('chip.try')}</span>` + CHIPS.L.concat(CHIPS.R).map((c, k) => chipHTML(c, k)).join('');
     $$('.chip').forEach(bindChip);
   }
 
@@ -393,7 +397,7 @@
     closeModals(true);
     $('#top').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
     const th = themeOf(o.theme);
-    const steps = [`读取 ${deck.slides.length} 页内容`, '识别标题、要点和关键数字', `套用「${th.name}」风格${o.palette ? ' · ' + esc(o.palette.name) : ''}`, '排版、留白、加点小装饰'];
+    const steps = [t('gen.read', deck.slides.length), t('gen.find'), t('gen.style', nm(th)) + (o.palette ? ' · ' + esc(nm(o.palette)) : ''), t('gen.polish')];
     const gen = $('#gen');
     gen.innerHTML =
       `<div class="gen-card">${o.file ? `<div class="gen-file">${esc(o.file)}</div>` : ''}<div class="gen-title">${esc(deck.title)}</div>` +
@@ -412,17 +416,17 @@
     await wait(reduceMotion ? 0 : 220);
     if (token !== genToken) return;
     gen.hidden = true;
-    Object.assign(state, { deck, source, cur: 0, stickers: {}, theme: o.theme, palette: o.palette || null, bg: o.bg || 'none' });
+    Object.assign(state, { deck, source, tplId: o.tplId || null, cur: 0, stickers: {}, theme: o.theme, palette: o.palette || null, bg: o.bg || 'none' });
     state.deckV++;
     update({ fx: { type: 'reveal' }, deal: true });
     const lc = lockedCount();
-    toast(lc ? `生成好了：共 ${total()} 页，前 ${P.FREE_PAGES} 页免费看` : `生成好了：共 ${total()} 页`);
+    toast(lc ? t('gen.doneLocked', total(), P.FREE_PAGES) : t('gen.done', total()));
   }
 
   async function handleFile(file) {
     if (!file) return;
     if (!/\.pptx$/i.test(file.name)) {
-      toast(/\.(ppt|key|pdf)$/i.test(file.name) ? '目前先支持 .pptx，可以在 PowerPoint / Keynote 里另存为 .pptx 再拖进来' : '这不是 .pptx 文件，换一个试试？');
+      toast(/\.(ppt|key|pdf)$/i.test(file.name) ? t('file.convert') : t('file.wrong'));
       return;
     }
     let deck;
@@ -430,10 +434,10 @@
       deck = await P.parsePptx(file);
     } catch (err) {
       console.warn('[play] could not read pptx', err);
-      toast('这个文件没读懂（可能加密或损坏），换一个试试？');
+      toast(t('file.broken'));
       return;
     }
-    if (!deck.slides.length) { toast('没在这个 PPT 里找到文字，换一个试试？'); return; }
+    if (!deck.slides.length) { toast(t('file.empty')); return; }
     // keep whatever look the visitor was already playing with
     generate(deck, 'upload', { theme: state.theme, palette: state.palette, bg: state.bg, file: file.name });
   }
@@ -456,56 +460,59 @@
   });
 
   /* ---------------- templates ---------------- */
-  const tplColors = t => (t.palette ? paletteOf(t.palette) : themeOf(t.theme).colors);
-  const tplSlide = (t, i) => P.slideHTML(t.deck.slides[i], i, t.deck.slides.length, { theme: t.theme, colors: tplColors(t), bg: t.bg || 'none' });
+  const tplColors = tp => (tp.palette ? paletteOf(tp.palette) : themeOf(tp.theme).colors);
+  const tplSlide = (tp, i) => { const d = P.tplDeck(tp); return P.slideHTML(d.slides[i], i, d.slides.length, { theme: tp.theme, colors: tplColors(tp), bg: tp.bg || 'none' }); };
 
-  function useTemplate(t, over) {
+  function useTemplate(tp, over) {
     over = over || {};
-    generate(clone(t.deck), 'template', {
-      theme: over.theme || t.theme,
-      palette: 'palette' in over ? over.palette : t.palette ? paletteOf(t.palette) : null,
-      bg: over.bg || t.bg || 'none',
+    generate(clone(P.tplDeck(tp)), 'template', {
+      tplId: tp.id,
+      theme: over.theme || tp.theme,
+      palette: 'palette' in over ? over.palette : tp.palette ? paletteOf(tp.palette) : null,
+      bg: over.bg || tp.bg || 'none',
     });
   }
 
   function renderTemplates() {
     const grid = $('#tplGrid');
-    grid.innerHTML = P.TEMPLATES.map(t =>
-      `<button class="tpl" data-t="${t.id}" aria-label="用模板「${t.name}」开始"><div class="tpl-pv">${tplSlide(t, 0)}</div>` +
-      `<div class="tpl-meta"><b>${t.name}</b><span>${t.deck.slides.length} 页 · ${themeOf(t.theme).name}</span></div><span class="tpl-go">用这个开始 →</span></button>`).join('');
+    grid.innerHTML = P.TEMPLATES.map(tp =>
+      `<button class="tpl" data-t="${tp.id}" aria-label="${t('tpl.aria', nm(tp))}"><div class="tpl-pv">${tplSlide(tp, 0)}</div>` +
+      `<div class="tpl-meta"><b>${nm(tp)}</b><span>${t('tpl.meta', P.tplDeck(tp).slides.length, nm(themeOf(tp.theme)))}</span></div><span class="tpl-go">${t('tpl.go')}</span></button>`).join('');
     $$('.tpl', grid).forEach(btn => {
-      const t = tplOf(btn.dataset.t);
+      const tp = tplOf(btn.dataset.t);
       const pv = $('.tpl-pv', btn);
+      const n = P.tplDeck(tp).slides.length;
       let k = 0;
       let timer = 0;
-      const flip = () => { k = (k + 1) % t.deck.slides.length; pv.innerHTML = tplSlide(t, k); };
+      const flip = () => { k = (k + 1) % n; pv.innerHTML = tplSlide(tp, k); };
       btn.addEventListener('pointerenter', e => {
         if (reduceMotion || e.pointerType !== 'mouse') return;
         clearInterval(timer);
         flip();
         timer = setInterval(flip, 850);
       });
-      btn.addEventListener('pointerleave', () => { clearInterval(timer); if (k) { k = 0; pv.innerHTML = tplSlide(t, 0); } });
-      btn.addEventListener('click', () => { clearInterval(timer); useTemplate(t); });
+      btn.addEventListener('pointerleave', () => { clearInterval(timer); if (k) { k = 0; pv.innerHTML = tplSlide(tp, 0); } });
+      btn.addEventListener('click', () => { clearInterval(timer); useTemplate(tp); });
     });
   }
 
   /* ---------------- asset library ---------------- */
-  const TABS = [['theme', '风格'], ['palette', '配色'], ['bg', '背景'], ['sticker', '贴纸']];
-  const tasted = (kind, id) => state.taste.some(t => t.kind === kind && t.id === id);
-  const nameOf = (kind, id) => (kind === 'theme' ? themeOf(id).name : kind === 'palette' ? (paletteOf(id) || {}).name : kind === 'bg' ? bgOf(id).name : stickerOf(id).name);
+  const TABS = ['theme', 'palette', 'bg', 'sticker'];
+  const tasted = (kind, id) => state.taste.some(x => x.kind === kind && x.id === id);
+  const itemOf = (kind, id) => (kind === 'theme' ? themeOf(id) : kind === 'palette' ? paletteOf(id) : kind === 'bg' ? bgOf(id) : stickerOf(id));
+  const nameOf = (kind, id) => nm(itemOf(kind, id));
   let libOn = false;
   let libDirty = true;
   let libSig = '';
 
   function renderTabs() {
     const n = { theme: P.THEMES.length, palette: P.PALETTES.length + state.extra.length, bg: P.BGS.length, sticker: P.STICKERS.length };
-    $('#libTabs').innerHTML = TABS.map(([id, name]) => `<button class="tab" role="tab" data-tab="${id}" aria-selected="${state.tab === id}">${name}<small>${n[id]}</small></button>`).join('');
+    $('#libTabs').innerHTML = TABS.map(id => `<button class="tab" role="tab" data-tab="${id}" aria-selected="${state.tab === id}">${t('tab.' + id)}<small>${n[id]}</small></button>`).join('');
   }
 
   function libSignature() {
     const c = JSON.stringify(colors());
-    return state.tab + '|' + { theme: state.deckV, palette: state.deckV + state.theme + state.extra.length, bg: c, sticker: c }[state.tab];
+    return P.lang + '|' + state.tab + '|' + { theme: state.deckV, palette: state.deckV + state.theme + state.extra.length, bg: c, sticker: c }[state.tab];
   }
 
   function renderLib(force) {
@@ -518,22 +525,22 @@
     const card = (kind, id, pv, name, sub, extra) =>
       `<article class="lc${state.fresh.has(id) ? ' fresh' : ''}" data-kind="${kind}" data-id="${id}" style="--k:${extra && extra.k ? extra.k : 0}">` +
       (extra && extra.badge ? `<span class="ai-badge">${extra.badge}</span>` : '') +
-      `<button class="lc-main" aria-label="应用${esc(name)}"><div class="lc-pv">${pv}</div><div class="lc-foot"><b>${esc(name)}</b><span>${esc(sub || '')}</span></div></button>` +
-      `<button class="heart" aria-pressed="false" aria-label="把${esc(name)}收进我的口味">${ICON.heart}</button></article>`;
+      `<button class="lc-main" aria-label="${esc(t('card.apply', name))}"><div class="lc-pv">${pv}</div><div class="lc-foot"><b>${esc(name)}</b><span>${esc(sub || '')}</span></div></button>` +
+      `<button class="heart" aria-pressed="false" aria-label="${esc(t('card.save', name))}">${ICON.heart}</button></article>`;
     let html = '';
     if (state.tab === 'theme') {
-      html = P.THEMES.map(t => card('theme', t.id, P.slideHTML(cover, 0, n, { theme: t.id, colors: t.colors, bg: 'none' }), t.name, t.en)).join('');
+      html = P.THEMES.map(th => card('theme', th.id, P.slideHTML(cover, 0, n, { theme: th.id, colors: th.colors, bg: 'none' }), nm(th), P.lang === 'en' ? th.desc : th.en)).join('');
     } else if (state.tab === 'palette') {
       let k = 0;
       html = state.extra.concat(P.PALETTES).map(p =>
         card('palette', p.id,
           P.slideHTML(cover, 0, n, { theme: state.theme, colors: p, bg: 'none' }) +
           `<div class="pal-strip">${['bg', 'fg', 'a1', 'a2', 'a3'].map(x => `<i style="background:${p[x]}"></i>`).join('')}</div>`,
-          p.name, p.ai ? '' : 'Play 配色', p.ai ? { badge: 'AI 扩展', k: k++ } : null)).join('');
+          nm(p), p.ai ? '' : t('card.playPalette'), p.ai ? { badge: t('card.ai'), k: k++ } : null)).join('');
     } else if (state.tab === 'bg') {
-      html = P.BGS.map(b => card('bg', b.id, `<div class="sf"><div class="slide" style="${P.vars(colors())}"><div class="bgp bgp-${b.id}"></div></div></div>`, b.name, '')).join('');
+      html = P.BGS.map(b => card('bg', b.id, `<div class="sf"><div class="slide" style="${P.vars(colors())}"><div class="bgp bgp-${b.id}"></div></div></div>`, nm(b), '')).join('');
     } else {
-      html = P.STICKERS.map((s, k) => card('sticker', s.id, `<div class="stk-tile" style="${P.vars(colors())};color:var(--${['a1', 'a2', 'a3'][k % 3]})">${P.stickerSVG(s)}</div>`, s.name, '')).join('');
+      html = P.STICKERS.map((s, k) => card('sticker', s.id, `<div class="stk-tile" style="${P.vars(colors())};color:var(--${['a1', 'a2', 'a3'][k % 3]})">${P.stickerSVG(s)}</div>`, nm(s), '')).join('');
     }
     $('#libGrid').innerHTML = html;
     state.fresh.clear();
@@ -566,9 +573,8 @@
       if (h.kind === 'sticker') o.stickers = o.stickers.concat([{ id: h.id, x: 82, y: 28, r: -10, c: 'a1' }]);
     }
     $('#libPreview').innerHTML = P.slideHTML(state.deck.slides[i], i, total(), o);
-    $('#libCap').innerHTML = h
-      ? `预览中：<b>${esc(nameOf(h.kind, h.id))}</b> —— 点击应用到舞台`
-      : `舞台上：<b>${themeOf(state.theme).name}</b>${state.palette ? ' · <b>' + esc(state.palette.name) + '</b>' : ''}${state.bg !== 'none' ? ' · <b>' + bgOf(state.bg).name + '</b>' : ''} · 第 ${i + 1} 页`;
+    const combo = `<b>${nm(themeOf(state.theme))}</b>${state.palette ? ' · <b>' + esc(nm(state.palette)) + '</b>' : ''}${state.bg !== 'none' ? ' · <b>' + nm(bgOf(state.bg)) + '</b>' : ''}`;
+    $('#libCap').innerHTML = h ? t('lib.previewing', esc(nameOf(h.kind, h.id))) : t('lib.onStage', combo, i + 1);
   }
 
   $('#libTabs').addEventListener('click', e => {
@@ -586,7 +592,7 @@
     if (kind === 'theme') setTheme(id);
     else if (kind === 'palette') setPalette(paletteOf(id));
     else if (kind === 'bg') setBg(id);
-    else { addSticker(id); toast(`贴到了舞台第 ${state.cur + 1} 页，回到上面可以拖动它`); }
+    else { addSticker(id); toast(t('lib.stuck', state.cur + 1)); }
   });
   libGrid.addEventListener('pointerover', e => {
     const card = e.target.closest('.lc');
@@ -600,7 +606,7 @@
 
   /* ---------------- taste: pick what you like, let Play extend it ---------------- */
   function toggleTaste(kind, id) {
-    const k = state.taste.findIndex(t => t.kind === kind && t.id === id);
+    const k = state.taste.findIndex(x => x.kind === kind && x.id === id);
     if (k >= 0) state.taste.splice(k, 1);
     else {
       state.taste.push({ kind, id });
@@ -610,18 +616,21 @@
     markLib();
   }
 
-  function tasteThumb(t) {
-    if (t.kind === 'theme') { const c = themeOf(t.id).colors; return `<span class="ti-name" style="background:${c.bg};color:${c.a1}">${themeOf(t.id).name.slice(0, 1)}</span>`; }
-    if (t.kind === 'palette') { const p = paletteOf(t.id); return `<span class="ti-dots">${[p.bg, p.a1, p.a2, p.a3].map(x => `<i style="background:${x}"></i>`).join('')}</span>`; }
-    if (t.kind === 'bg') return `<span class="sf"><span class="slide" style="${P.vars(colors())}"><span class="bgp bgp-${t.id}"></span></span></span>`;
-    return `<span style="${P.vars(BRANDC)};display:block;width:100%;height:100%;color:#FF4D1F">${P.stickerSVG(stickerOf(t.id))}</span>`;
+  function tasteThumb(x) {
+    if (x.kind === 'theme') { const th = themeOf(x.id); return `<span class="ti-name" style="background:${th.colors.bg};color:${th.colors.a1}">${nm(th).slice(0, 1)}</span>`; }
+    if (x.kind === 'palette') { const p = paletteOf(x.id); return `<span class="ti-dots">${[p.bg, p.a1, p.a2, p.a3].map(c => `<i style="background:${c}"></i>`).join('')}</span>`; }
+    if (x.kind === 'bg') return `<span class="sf"><span class="slide" style="${P.vars(colors())}"><span class="bgp bgp-${x.id}"></span></span></span>`;
+    return `<span style="${P.vars(BRANDC)};display:block;width:100%;height:100%;color:#FF4D1F">${P.stickerSVG(stickerOf(x.id))}</span>`;
   }
 
   function renderTaste() {
     const el = $('#taste');
     el.classList.toggle('show', state.taste.length > 0);
     $('#tasteCount').textContent = state.taste.length;
-    $('#tasteItems').innerHTML = state.taste.map((t, k) => `<button class="ti" data-k="${k}" title="移除：${esc(nameOf(t.kind, t.id))}" aria-label="从口味里移除${esc(nameOf(t.kind, t.id))}">${tasteThumb(t)}</button>`).join('');
+    $('#tasteItems').innerHTML = state.taste.map((x, k) => {
+      const n = esc(nameOf(x.kind, x.id));
+      return `<button class="ti" data-k="${k}" title="${n}" aria-label="${esc(t('taste.remove', n))}">${tasteThumb(x)}</button>`;
+    }).join('');
   }
 
   // colour helpers for blending / extending palettes
@@ -655,22 +664,29 @@
   };
   const contrast = (a, b) => { const x = lum(a); const y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); };
 
+  // generated palettes carry names in both languages so a language switch keeps them readable
   function blend(ps) {
     const [p, q] = ps.slice(-2);
     const a1 = contrast(q.a1, p.bg) >= 2.2 ? q.a1 : p.a1;
-    return { id: `mix-${p.id}-${q.id}`, name: `${p.name} × ${q.name}`, bg: p.bg, fg: p.fg, a1, a2: a1 === q.a1 ? p.a1 : q.a1, a3: q.a2 };
+    return { id: `mix-${p.id}-${q.id}`, name: `${p.name} × ${q.name}`, en: `${p.en || p.name} × ${q.en || q.name}`, bg: p.bg, fg: p.fg, a1, a2: a1 === q.a1 ? p.a1 : q.a1, a3: q.a2 };
   }
 
+  const TAGS = { warm: ['暖调', 'Warm'], cool: ['冷调', 'Cool'], clash: ['撞色', 'Clash'] };
   let aiSeq = 0;
   function variant(p, tag, dh) {
-    const acc = tag === '撞色'
+    const acc = tag === 'clash'
       ? { a1: shiftHue(p.a1, 180), a2: p.a1, a3: shiftHue(p.a3, 150) }
       : { a1: shiftHue(p.a1, dh), a2: shiftHue(p.a2, dh), a3: shiftHue(p.a3, dh) };
-    return { id: 'ai' + ++aiSeq, name: `${p.name.split('·')[0]}·${tag}`, bg: tag === '撞色' ? p.bg : shiftHue(p.bg, dh / 2), fg: p.fg, ...acc, ai: true };
+    return {
+      id: 'ai' + ++aiSeq,
+      name: `${p.name.split('·')[0]}·${TAGS[tag][0]}`,
+      en: `${(p.en || p.name).split(' · ')[0]} · ${TAGS[tag][1]}`,
+      bg: tag === 'clash' ? p.bg : shiftHue(p.bg, dh / 2), fg: p.fg, ...acc, ai: true,
+    };
   }
 
   function applyTaste() {
-    const of = kind => state.taste.filter(t => t.kind === kind).map(t => t.id);
+    const of = kind => state.taste.filter(x => x.kind === kind).map(x => x.id);
     const themes = of('theme');
     const pals = of('palette').map(paletteOf).filter(Boolean);
     const bgs = of('bg');
@@ -687,20 +703,21 @@
     $('#top').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
     setTimeout(() => {
       update({ fx: { type: 'reveal' } });
-      toast(`按你挑的 ${state.taste.length} 样东西，拼出了一套新风格${state.palette ? '「' + state.palette.name + '」' : ''}`);
+      toast(t('taste.built', state.taste.length, state.palette ? nm(state.palette) : ''));
     }, reduceMotion ? 0 : 450);
   }
 
   function extendPalettes() {
-    const mine = state.taste.filter(t => t.kind === 'palette').map(t => paletteOf(t.id)).filter(Boolean);
-    const src = mine[mine.length - 1] || { ...colors(), name: themeOf(state.theme).name };
-    const out = [['暖调', 24], ['冷调', -40], ['撞色', 180]].map(([tag, dh]) => variant(src, tag, dh));
+    const mine = state.taste.filter(x => x.kind === 'palette').map(x => paletteOf(x.id)).filter(Boolean);
+    const th = themeOf(state.theme);
+    const src = mine[mine.length - 1] || { ...colors(), name: th.name, en: th.en };
+    const out = [['warm', 24], ['cool', -40], ['clash', 180]].map(([tag, dh]) => variant(src, tag, dh));
     state.extra.unshift(...out);
     out.forEach(p => state.fresh.add(p.id));
     state.tab = 'palette';
     $('#library').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth' });
     renderLib(true);
-    toast(`照着「${src.name}」扩展了 3 套新配色，就在配色列表最前面`);
+    toast(t('taste.extended', nm(src)));
   }
 
   $('#tasteItems').addEventListener('click', e => {
@@ -718,11 +735,12 @@
   function renderGallery() {
     P.GALLERY.forEach((row, r) => {
       const items = row.map(([tid, si, theme, pal, bg]) => {
-        const t = tplOf(tid);
+        const tp = tplOf(tid);
+        const d = P.tplDeck(tp);
         const c = pal ? paletteOf(pal) : themeOf(theme).colors;
-        const tag = themeOf(theme).name + (pal ? ' × ' + paletteOf(pal).name : '');
-        return `<button class="g-item" data-g="${tid}|${theme}|${pal || ''}|${bg}" aria-label="用「${t.name}」· ${tag} 开始">` +
-          P.slideHTML(t.deck.slides[si], si, t.deck.slides.length, { theme, colors: c, bg }) +
+        const tag = nm(themeOf(theme)) + (pal ? ' × ' + nm(paletteOf(pal)) : '');
+        return `<button class="g-item" data-g="${tid}|${theme}|${pal || ''}|${bg}" aria-label="${esc(t('gallery.aria', nm(tp), tag))}">` +
+          P.slideHTML(d.slides[si], si, d.slides.length, { theme, colors: c, bg }) +
           `<span class="g-tag">${tag}</span></button>`;
       }).join('');
       const copy = items.replace(/<button /g, '<button tabindex="-1" aria-hidden="true" ');
@@ -773,10 +791,8 @@
     const idx = lc ? state.deck.slides.map((_, i) => i).filter(isLocked).slice(0, 3) : [0, 1, 2].filter(i => i < total());
     $('#unlockFan').innerHTML = idx.map(i => P.slideHTML(state.deck.slides[i], i, total(), { ...baseOpts(i), locked: lc > 0, lockHTML: lockMini })).join('');
     fanOut($('#unlockFan'), 40);
-    $('#unlockTitle').innerHTML = lc ? `还有 <em>${lc}</em> 页等你看` : state.registered ? '你已经注册啦 🎉' : '注册 Play，免费';
-    $('#unlockText').textContent = lc
-      ? '免费注册就能看完整结果、导出 PPTX / PDF，还会记住你的口味，下次接着玩。'
-      : state.registered ? '完整页面和导出都已解锁。去摇一摇，再做一份吧。' : '注册后可以看完整结果、导出 PPTX / PDF，并保存你的口味和作品。';
+    $('#unlockTitle').innerHTML = lc ? t('unlock.more', lc) : state.registered ? t('unlock.done') : t('unlock.join');
+    $('#unlockText').textContent = lc ? t('unlock.moreText') : state.registered ? t('unlock.doneText') : t('unlock.joinText');
     $('#unlockModal .modal-actions').hidden = state.registered;
     openModal('unlockModal');
   }
@@ -787,7 +803,7 @@
     closeModals();
     update();
     confetti();
-    toast(had ? `解锁成功！全部 ${total()} 页都能看了（原型模拟）` : '注册成功（原型模拟）');
+    toast(had ? t('reg.unlocked', total()) : t('reg.done'));
   }));
 
   let shareTimer = 0;
@@ -799,21 +815,21 @@
       `<div class="sc-top"><span class="logo"><span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span>play</span><span id="scLive">Made with Play</span></div>` +
       `<div class="sc-fan" id="scFan"></div>` +
       `<div class="sc-title">${esc(state.deck.title)}</div>` +
-      `<div class="sc-sub">一份内容，${P.THEMES.length} 种风格。我最爱「${th.name}」。</div>` +
-      `<div class="sc-foot"><span>你也来玩一下 →</span><span>免费试玩</span></div>`;
+      `<div class="sc-sub">${t('share.sub', P.THEMES.length, nm(th))}</div>` +
+      `<div class="sc-foot"><span>${t('share.cta')}</span><span>${t('share.try')}</span></div>`;
     const draw = (theme, c, bg) => {
       $('#scFan').innerHTML = idx.map(i => P.slideHTML(state.deck.slides[i], i, total(), { theme, colors: c, bg, stickers: state.stickers[i] || [] })).join('');
       fanOut($('#scFan'), 22, true);
     };
     draw(state.theme, colors(), state.bg);
-    let k = P.THEMES.findIndex(t => t.id === state.theme);
+    let k = P.THEMES.findIndex(x => x.id === state.theme);
     clearInterval(shareTimer);
     if (!reduceMotion) {
       shareTimer = setInterval(() => {
         k = (k + 1) % P.THEMES.length;
-        const t = P.THEMES[k];
-        draw(t.id, t.colors, 'none');
-        $('#scLive').textContent = `自动换装 · ${t.name}`;
+        const nt = P.THEMES[k];
+        draw(nt.id, nt.colors, 'none');
+        $('#scLive').textContent = t('share.live', nm(nt));
       }, 1500);
     }
     openModal('shareModal');
@@ -821,29 +837,29 @@
   $('#shareBtn').addEventListener('click', openShare);
   $('#shareBtn2').addEventListener('click', openShare);
   $('#copyShare').addEventListener('click', async () => {
-    const text = `我用 Play 把「${state.deck.title}」换了 ${P.THEMES.length} 种风格，最后选了「${themeOf(state.theme).name}」。你也来 Play 玩一下。`;
+    const text = t('share.caption', state.deck.title, P.THEMES.length, nm(themeOf(state.theme)));
     try {
       await navigator.clipboard.writeText(text);
-      toast('文案已复制，去分享吧');
+      toast(t('share.copied'));
     } catch (err) {
-      toast('浏览器没让复制，手动复制一下：' + text);
+      toast(t('share.blocked') + text);
     }
   });
   $('#exportBtn').addEventListener('click', () => {
     if (!state.registered) { openUnlock(); return; }
-    toast('导出 PPTX 还没接后端（原型），先做张分享卡吧');
+    toast(t('export.todo'));
   });
 
   /* ---------------- misc controls ---------------- */
   document.addEventListener('click', e => {
-    const t = e.target.closest('[data-action],[data-open],[data-close],[data-clear]');
-    if (!t) return;
-    if (t.dataset.action === 'upload') { e.preventDefault(); fileInput.click(); }
-    if (t.dataset.open === 'unlock') { e.preventDefault(); openUnlock(); }
-    if ('close' in t.dataset) closeModals();
-    if (t.dataset.clear === 'palette') setPalette(null);
-    if (t.dataset.clear === 'bg') setBg('none');
-    if (t.dataset.clear === 'stickers') { delete state.stickers[state.cur]; update(); }
+    const el = e.target.closest('[data-action],[data-open],[data-close],[data-clear]');
+    if (!el) return;
+    if (el.dataset.action === 'upload') { e.preventDefault(); fileInput.click(); }
+    if (el.dataset.open === 'unlock') { e.preventDefault(); openUnlock(); }
+    if ('close' in el.dataset) closeModals();
+    if (el.dataset.clear === 'palette') setPalette(null);
+    if (el.dataset.clear === 'bg') setBg('none');
+    if (el.dataset.clear === 'stickers') { delete state.stickers[state.cur]; update(); }
   });
 
   $('#dock').addEventListener('click', e => {
@@ -859,7 +875,7 @@
   $('#shuffleBtn').addEventListener('click', e => {
     stopAutoplay();
     hideHint();
-    state.theme = pick(P.THEMES.filter(t => t.id !== state.theme)).id;
+    state.theme = pick(P.THEMES.filter(x => x.id !== state.theme)).id;
     state.palette = Math.random() < 0.55 ? pick(P.PALETTES) : null;
     state.bg = Math.random() < 0.5 ? pick(P.BGS.slice(1)).id : 'none';
     update({ fx: { type: 'reveal', x: e.clientX || undefined, y: e.clientY || undefined } });
@@ -887,11 +903,11 @@
 
   let toastTimer = 0;
   function toast(msg) {
-    const t = $('#toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
   }
 
   function confetti() {
@@ -914,20 +930,11 @@
   }
 
   /* ---------------- static bits ---------------- */
-  function renderStatic() {
-    const words = ['上传 PPT', '点选风格', '拖拽配色', '贴个贴纸', '前 3 页免费', '摇一摇', '一键分享卡', '口味越用越懂你'];
-    const run = words.map(w => `<span>${w}</span><i>✺</i>`).join('');
-    $('#ticker').innerHTML = run.repeat(4);
-
-    $('#artSwatch').innerHTML = P.PALETTES.slice(0, 10).map(p => `<i style="background:${p.a1}" title="${p.name}"></i>`).join('');
-    const mem = themeOf('memphis');
-    $('#artPages').innerHTML = P.DEMO.slides.slice(0, 6).map((s, i) => P.slideHTML(s, i, P.DEMO.slides.length, { theme: 'memphis', colors: mem.colors, bg: 'none', locked: i >= P.FREE_PAGES, lockHTML: '' })).join('');
-
-    $('#tokens').innerHTML = P.BRAND.map(b => `<button class="token" data-hex="${b.hex}" aria-label="复制 ${b.name} ${b.hex}"><i style="background:${b.hex}"></i><span>${b.name} ${b.en}<small>${b.hex}</small></span></button>`).join('');
+  function bindStatic() {
     $('#tokens').addEventListener('click', async e => {
       const b = e.target.closest('.token');
       if (!b) return;
-      try { await navigator.clipboard.writeText(b.dataset.hex); toast(`已复制 ${b.dataset.hex}`); } catch (err) { toast(b.dataset.hex); }
+      try { await navigator.clipboard.writeText(b.dataset.hex); toast(t('token.copied', b.dataset.hex)); } catch (err) { toast(b.dataset.hex); }
     });
 
     const FONTS = ['"Bricolage Grotesque"', '"Inter Tight"', '"ZCOOL KuaiLe"', '"Instrument Serif"', '"Space Mono"', '"Unbounded"', '"Archivo Black"', '"Ma Shan Zheng"'];
@@ -948,16 +955,65 @@
     });
   }
 
+  // everything on the page that depends on the language but not on the stage
+  function renderCopy() {
+    const root = document.documentElement;
+    root.lang = P.lang === 'en' ? 'en' : 'zh-CN';
+    document.title = t('doc.title');
+    const meta = $('meta[name="description"]');
+    if (meta) meta.content = t('doc.desc');
+    $$('[data-i18n]').forEach(el => { el.innerHTML = t(el.dataset.i18n); });
+    $$('[data-i18n-aria]').forEach(el => el.setAttribute('aria-label', t(el.dataset.i18nAria)));
+    $$('#langBtn [data-l]').forEach(s => s.classList.toggle('on', s.dataset.l === P.lang));
+    $('[disabled][data-i18n="share.mp4"]').title = t('share.mp4tip');
+
+    const run = t('ticker').map(w => `<span>${w}</span><i>✺</i>`).join('');
+    $('#ticker').innerHTML = run.repeat(4);
+    $('#artSwatch').innerHTML = P.PALETTES.slice(0, 10).map(p => `<i style="background:${p.a1}" title="${nm(p)}"></i>`).join('');
+    const mem = themeOf('memphis');
+    const demo = P.demo();
+    $('#artPages').innerHTML = demo.slides.slice(0, 6).map((s, i) => P.slideHTML(s, i, demo.slides.length, { theme: 'memphis', colors: mem.colors, bg: 'none', locked: i >= P.FREE_PAGES, lockHTML: '' })).join('');
+    $('#tokens').innerHTML = P.BRAND.map(b => `<button class="token" data-hex="${b.hex}" aria-label="${t('token.copy', b.hex)}"><i style="background:${b.hex}"></i><span>${b.name} ${b.en}<small>${b.hex}</small></span></button>`).join('');
+  }
+
+  /* ---------------- language switch ---------------- */
+  function setLang(lang) {
+    if (lang === P.lang) return;
+    P.lang = lang;
+    try { localStorage.setItem('play-lang', lang); } catch (err) { /* per-viewer nicety only */ }
+    try {
+      const u = new URL(location.href);
+      u.searchParams.set('lang', lang);
+      history.replaceState(null, '', u);
+    } catch (err) { /* sandboxed frames may refuse; the switch still works */ }
+    // our own decks change language; an uploaded deck stays as the visitor wrote it
+    if (state.source === 'demo') state.deck = clone(P.demo());
+    if (state.source === 'template' && state.tplId) state.deck = clone(P.tplDeck(tplOf(state.tplId)));
+    state.deckV++;
+    closeModals(true);
+    $('#toast').classList.remove('show');
+    renderCopy();
+    renderChips();
+    renderTemplates();
+    renderGallery();
+    renderTaste();
+    renderTabs();
+    update();
+    if (libOn) renderLib(true);
+  }
+  $('#langBtn').addEventListener('click', () => setLang(P.lang === 'en' ? 'zh' : 'en'));
+
   /* ---------------- boot ---------------- */
+  bindStatic();
+  renderCopy();
   renderChips();
   renderTemplates();
   renderGallery();
-  renderStatic();
   renderTabs();
   renderTaste();
   update();
   startAutoplay();
 
   // handle for debugging / tests in the console
-  P.app = { state, update, generate, handleFile, useTemplate };
+  P.app = { state, update, generate, handleFile, useTemplate, setLang };
 })(window.PLAY);

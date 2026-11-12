@@ -19,18 +19,19 @@
   </svg>
 
   <header class="nav" id="nav">
-    <a class="logo" href="#top" aria-label="Play 首页">
+    <a class="logo" href="#top" data-i18n-aria="nav.home" aria-label="Play 首页">
       <span class="logo-mark" aria-hidden="true"><i></i><i></i><i></i></span>play
     </a>
-    <nav class="nav-links" aria-label="主导航">
-      <a href="#templates">模板</a>
-      <a href="#library">资产库</a>
-      <a href="#how">怎么玩</a>
-      <a href="#gallery">作品墙</a>
+    <nav class="nav-links" aria-label="Play">
+      <a href="#templates" data-i18n="nav.templates">模板</a>
+      <a href="#library" data-i18n="nav.library">资产库</a>
+      <a href="#how" data-i18n="nav.how">怎么玩</a>
+      <a href="#gallery" data-i18n="nav.gallery">作品墙</a>
     </nav>
     <div class="nav-cta">
-      <button class="link-btn" data-open="unlock">登录</button>
-      <button class="btn btn-sm btn-ink" data-action="upload">免费开始</button>
+      <button class="lang-btn" id="langBtn" data-i18n-aria="nav.lang" aria-label="切换到英文"><span data-l="zh">中</span><span data-l="en">EN</span></button>
+      <button class="link-btn" data-open="unlock" data-i18n="nav.login">登录</button>
+      <button class="btn btn-sm btn-ink" data-action="upload" data-i18n="nav.start">免费开始</button>
     </div>
   </header>
 
@@ -39,47 +40,47 @@
     <section class="hero" id="top">
       <div class="hero-head">
         <div>
-          <p class="eyebrow"><span class="dot"></span>Play · 能玩的设计 AI</p>
-          <h1>别描述，<span class="nowrap">直接<span class="wan">玩</span>。</span></h1>
+          <p class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow">Play · 能玩的设计 AI</span></p>
+          <h1 data-i18n="hero.h1">别描述，<span class="nowrap">直接<span class="wan">玩</span>。</span></h1>
         </div>
         <div class="hero-side">
-          <p class="lede">上传你的 PPT，或者挑一个模板。点一下换风格，拖一下换配色——几秒钟看到成品，<b>前 3 页免费</b>。</p>
+          <p class="lede" data-i18n="hero.lede">上传你的 PPT，或者挑一个模板。点一下换风格，拖一下换配色——几秒钟看到成品，<b>前 3 页免费</b>。</p>
           <div class="cta-row">
-            <button class="btn btn-primary btn-lg" data-action="upload"><span data-icon="upload"></span>上传我的 PPT</button>
-            <a class="btn btn-lg" href="#templates">从模板开始 →</a>
+            <button class="btn btn-primary btn-lg" data-action="upload"><span data-icon="upload"></span><span data-i18n="hero.upload">上传我的 PPT</span></button>
+            <a class="btn btn-lg" href="#templates" data-i18n="hero.fromTpl">从模板开始 →</a>
           </div>
-          <p class="fine">.pptx · 在你的浏览器里解析 · 不用注册就能玩</p>
+          <p class="fine" data-i18n="hero.fine">.pptx · 在你的浏览器里解析 · 不用注册就能玩</p>
         </div>
       </div>
 
       <div class="desk">
-        <div class="chips chips-l" id="chipsL" aria-label="可拖拽的配色和背景"></div>
+        <div class="chips chips-l" id="chipsL" data-i18n-aria="aria.chipsL" aria-label="可拖拽的配色和背景"></div>
 
         <div class="stage-col">
           <div class="stage-wrap" id="stageWrap">
             <div class="stage" id="stage" aria-live="polite"></div>
-            <div class="stage-drop" aria-hidden="true">松手，应用到这一页</div>
+            <div class="stage-drop" aria-hidden="true" data-i18n="stage.drop">松手，应用到这一页</div>
             <div class="gen" id="gen" hidden></div>
-            <button class="stage-nav prev" id="prevBtn" aria-label="上一页"></button>
-            <button class="stage-nav next" id="nextBtn" aria-label="下一页"></button>
+            <button class="stage-nav prev" id="prevBtn" data-i18n-aria="stage.prev" aria-label="上一页"></button>
+            <button class="stage-nav next" id="nextBtn" data-i18n-aria="stage.next" aria-label="下一页"></button>
           </div>
 
           <div class="toolbar">
             <div class="deck-info" id="deckInfo"></div>
             <div class="tool-actions">
-              <button class="tbtn" id="shuffleBtn"><span data-icon="dice"></span>摇一摇</button>
-              <button class="tbtn" id="shareBtn"><span data-icon="share"></span>分享卡</button>
-              <button class="tbtn tbtn-ink" id="exportBtn"><span data-icon="download"></span>导出 PPTX</button>
+              <button class="tbtn" id="shuffleBtn"><span data-icon="dice"></span><span data-i18n="tool.shuffle">摇一摇</span></button>
+              <button class="tbtn" id="shareBtn"><span data-icon="share"></span><span data-i18n="tool.share">分享卡</span></button>
+              <button class="tbtn tbtn-ink" id="exportBtn"><span data-icon="download"></span><span data-i18n="tool.export">导出 PPTX</span></button>
             </div>
           </div>
 
-          <div class="dock" id="dock" role="group" aria-label="风格"></div>
+          <div class="dock" id="dock" role="group" data-i18n-aria="aria.dock" aria-label="风格"></div>
           <div class="combo" id="combo"></div>
-          <div class="chips-m" id="chipsM" aria-label="试试这些"></div>
-          <div class="film" id="film" aria-label="页面"></div>
+          <div class="chips-m" id="chipsM" data-i18n-aria="aria.chipsM" aria-label="试试这些"></div>
+          <div class="film" id="film" data-i18n-aria="aria.film" aria-label="页面"></div>
         </div>
 
-        <div class="chips chips-r" id="chipsR" aria-label="可拖拽的贴纸"></div>
+        <div class="chips chips-r" id="chipsR" data-i18n-aria="aria.chipsR" aria-label="可拖拽的贴纸"></div>
       </div>
     </section>
 
@@ -91,14 +92,14 @@
     <section class="sec" id="templates">
       <header class="sec-head">
         <span class="sec-no">01</span>
-        <h2>从模板开始</h2>
-        <p>挑一个顺眼的。悬停翻页，点一下就生成——内容和风格都还能接着玩。</p>
+        <h2 data-i18n="sec1.title">从模板开始</h2>
+        <p data-i18n="sec1.desc">挑一个顺眼的。悬停翻页，点一下就生成——内容和风格都还能接着玩。</p>
       </header>
       <div class="tpl-grid" id="tplGrid"></div>
       <button class="drop-band" data-action="upload">
         <span class="drop-ico" data-icon="upload"></span>
-        <span><b>已经有 PPT 了？</b>把 .pptx 拖到页面任意位置，或点这里选择文件</span>
-        <span class="drop-go">选择文件 →</span>
+        <span data-i18n="drop.text"><b>已经有 PPT 了？</b>把 .pptx 拖到页面任意位置，或点这里选择文件</span>
+        <span class="drop-go" data-i18n="drop.go">选择文件 →</span>
       </button>
     </section>
 
@@ -106,22 +107,22 @@
     <section class="sec" id="library">
       <header class="sec-head">
         <span class="sec-no">02</span>
-        <h2>风格不用说出来，<br>点出来。</h2>
-        <p>8 套风格 · 16 套 Play 配色 · 12 种背景 · 16 个贴纸。点一下应用，♥ 收进你的口味，让 AI 照着你的口味往下扩展。</p>
+        <h2 data-i18n="sec2.title">风格不用说出来，<br>点出来。</h2>
+        <p data-i18n="sec2.desc">8 套风格 · 16 套 Play 配色 · 12 种背景 · 16 个贴纸。点一下应用，♥ 收进你的口味，让 AI 照着你的口味往下扩展。</p>
       </header>
       <div class="lib">
         <aside class="lib-side">
           <div class="lib-preview" id="libPreview"></div>
           <p class="lib-cap" id="libCap"></p>
           <ol class="lib-how">
-            <li><b>悬停</b>先看效果</li>
-            <li><b>点击</b>应用到舞台</li>
-            <li><b>♥</b>收进口味，一键生成</li>
+            <li data-i18n="lib.how1"><b>悬停</b>先看效果</li>
+            <li data-i18n="lib.how2"><b>点击</b>应用到舞台</li>
+            <li data-i18n="lib.how3"><b>♥</b>收进口味，一键生成</li>
           </ol>
-          <a class="btn btn-sm" href="#top">回到舞台看看 ↑</a>
+          <a class="btn btn-sm" href="#top" data-i18n="lib.back">回到舞台看看 ↑</a>
         </aside>
         <div class="lib-main">
-          <div class="tabs" id="libTabs" role="tablist" aria-label="资产类型"></div>
+          <div class="tabs" id="libTabs" role="tablist" data-i18n-aria="lib.tabs" aria-label="资产类型"></div>
           <div class="lib-grid" id="libGrid"></div>
         </div>
       </div>
@@ -132,61 +133,61 @@
       <div class="sec">
         <header class="sec-head">
           <span class="sec-no">03</span>
-          <h2>30 秒，从空白到成品</h2>
-          <p>不用先学提示词，也不用先注册。先玩，喜欢再说。</p>
+          <h2 data-i18n="sec3.title">30 秒，从空白到成品</h2>
+          <p data-i18n="sec3.desc">不用先学提示词，也不用先注册。先玩，喜欢再说。</p>
         </header>
         <ol class="steps">
           <li class="step s1">
             <span class="step-n">1</span>
-            <h3>拖进来</h3>
-            <p>上传你的 PPT，或者挑一个模板。</p>
+            <h3 data-i18n="step1.h">拖进来</h3>
+            <p data-i18n="step1.p">上传你的 PPT，或者挑一个模板。</p>
             <div class="step-art art-file"><span>.pptx</span></div>
           </li>
           <li class="step s2">
             <span class="step-n">2</span>
-            <h3>点一点</h3>
-            <p>点风格、拖配色、贴贴纸，所见即所得。</p>
+            <h3 data-i18n="step2.h">点一点</h3>
+            <p data-i18n="step2.p">点风格、拖配色、贴贴纸，所见即所得。</p>
             <div class="step-art art-swatch" id="artSwatch"></div>
           </li>
           <li class="step s3">
             <span class="step-n">3</span>
-            <h3>免费看 3 页</h3>
-            <p>生成结果直接预览，不满意就再摇一次。</p>
+            <h3 data-i18n="step3.h">免费看 3 页</h3>
+            <p data-i18n="step3.p">生成结果直接预览，不满意就再摇一次。</p>
             <div class="step-art art-pages" id="artPages"></div>
           </li>
           <li class="step s4">
             <span class="step-n">4</span>
-            <h3>注册解锁</h3>
-            <p>看完整结果，导出 PPTX / PDF，还能做成分享卡。</p>
-            <div class="step-art art-badges"><span>PPTX</span><span>PDF</span><span>分享卡</span><span>动态视频 · 即将上线</span></div>
+            <h3 data-i18n="step4.h">注册解锁</h3>
+            <p data-i18n="step4.p">看完整结果，导出 PPTX / PDF，还能做成分享卡。</p>
+            <div class="step-art art-badges"><span>PPTX</span><span>PDF</span><span data-i18n="step4.share">分享卡</span><span data-i18n="step4.video">动态视频 · 即将上线</span></div>
           </li>
         </ol>
 
         <div class="plans">
           <article class="plan">
-            <h3>随便玩</h3>
-            <p class="plan-price">免费 · 不用注册</p>
-            <ul>
+            <h3 data-i18n="plan1.h">随便玩</h3>
+            <p class="plan-price" data-i18n="plan1.price">免费 · 不用注册</p>
+            <ul data-i18n="plan1.li">
               <li>所有风格、配色、背景随便换</li>
               <li>每份 PPT 生成并预览前 3 页</li>
               <li>贴纸、摇一摇、分享卡</li>
             </ul>
           </article>
           <article class="plan plan-hot">
-            <span class="plan-tag">推荐</span>
-            <h3>注册用户</h3>
-            <p class="plan-price">免费</p>
-            <ul>
+            <span class="plan-tag" data-i18n="plan2.tag">推荐</span>
+            <h3 data-i18n="plan2.h">注册用户</h3>
+            <p class="plan-price" data-i18n="plan2.price">免费</p>
+            <ul data-i18n="plan2.li">
               <li>解锁完整页面</li>
               <li>导出 PPTX / PDF</li>
               <li>保存你的口味，下次接着玩</li>
             </ul>
-            <button class="btn btn-primary" data-open="unlock">免费注册</button>
+            <button class="btn btn-primary" data-open="unlock" data-i18n="plan2.btn">免费注册</button>
           </article>
           <article class="plan">
-            <h3>Pro</h3>
-            <p class="plan-price">即将推出</p>
-            <ul>
+            <h3 data-i18n="plan3.h">Pro</h3>
+            <p class="plan-price" data-i18n="plan3.price">即将推出</p>
+            <ul data-i18n="plan3.li">
               <li>导出动态视频，直接发社媒</li>
               <li>品牌套件：Logo、字体、品牌色</li>
               <li>团队共享资产库</li>
@@ -200,74 +201,75 @@
     <section class="sec sec-gallery" id="gallery">
       <header class="sec-head">
         <span class="sec-no">04</span>
-        <h2>这些，都是 Play 做的</h2>
-        <p>同一批内容，换个风格就是另一种性格。点任意一张，用它开始。</p>
+        <h2 data-i18n="sec4.title">这些，都是 Play 做的</h2>
+        <p data-i18n="sec4.desc">同一批内容，换个风格就是另一种性格。点任意一张，用它开始。</p>
       </header>
     </section>
     <div class="marquee" id="mq0"></div>
     <div class="marquee rev" id="mq1"></div>
     <div class="gallery-cta">
-      <button class="btn btn-primary btn-lg" id="shareBtn2"><span data-icon="share"></span>把我的作品做成分享卡</button>
+      <button class="btn btn-primary btn-lg" id="shareBtn2"><span data-icon="share"></span><span data-i18n="gallery.cta">把我的作品做成分享卡</span></button>
     </div>
   </main>
 
   <footer class="foot">
     <div class="giant" id="giant" aria-label="PLAY"><span>P</span><span>L</span><span>A</span><span>Y</span></div>
-    <p class="giant-hint">↑ 点一下字母试试</p>
+    <p class="giant-hint" data-i18n="foot.hint">↑ 点一下字母试试</p>
     <div class="tokens">
-      <h3>Play 色板</h3>
+      <h3 data-i18n="foot.tokens">Play 色板</h3>
       <div class="token-row" id="tokens"></div>
     </div>
     <div class="foot-row">
-      <span>© 2026 Play · 设计，可以玩的。</span>
-      <span>原型 · 所有生成都在你的浏览器里完成</span>
+      <span data-i18n="foot.copy">© 2026 Play · 设计，可以玩的。</span>
+      <span data-i18n="foot.note">原型 · 所有生成都在你的浏览器里完成</span>
     </div>
   </footer>
 
   <!-- floating "my taste" tray -->
   <div class="taste" id="taste" aria-live="polite">
-    <span class="taste-label">我的口味 <b id="tasteCount">0</b></span>
+    <span class="taste-label"><span data-i18n="taste.label">我的口味</span> <b id="tasteCount">0</b></span>
     <div class="taste-items" id="tasteItems"></div>
-    <button class="taste-btn taste-go" id="tasteGo"><span data-icon="spark"></span>按我的口味生成</button>
-    <button class="taste-btn" id="extendBtn">再扩展 3 套相似配色</button>
-    <button class="taste-x" id="tasteClear" aria-label="清空口味">×</button>
+    <button class="taste-btn taste-go" id="tasteGo"><span data-icon="spark"></span><span data-i18n="taste.go">按我的口味生成</span></button>
+    <button class="taste-btn" id="extendBtn" data-i18n="taste.extend">再扩展 3 套相似配色</button>
+    <button class="taste-x" id="tasteClear" data-i18n-aria="taste.clear" aria-label="清空口味">×</button>
   </div>
 
   <!-- unlock / sign-up -->
   <div class="modal" id="unlockModal" role="dialog" aria-modal="true" aria-labelledby="unlockTitle" hidden>
     <div class="modal-card">
-      <button class="modal-x" data-close aria-label="关闭">×</button>
+      <button class="modal-x" data-close data-i18n-aria="close" aria-label="关闭">×</button>
       <div class="unlock-fan" id="unlockFan"></div>
       <h3 id="unlockTitle"></h3>
       <p id="unlockText"></p>
       <div class="modal-actions">
-        <button class="btn btn-primary" data-register>微信一键注册</button>
-        <button class="btn" data-register>用邮箱注册</button>
+        <button class="btn btn-primary" data-register data-i18n="unlock.a">微信一键注册</button>
+        <button class="btn" data-register data-i18n="unlock.b">用邮箱注册</button>
       </div>
-      <p class="fine">原型演示：点击即模拟注册成功，不会收集任何信息。</p>
+      <p class="fine" data-i18n="unlock.fine">原型演示：点击即模拟注册成功，不会收集任何信息。</p>
     </div>
   </div>
 
   <!-- share card -->
   <div class="modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle" hidden>
     <div class="modal-card modal-share">
-      <button class="modal-x" data-close aria-label="关闭">×</button>
+      <button class="modal-x" data-close data-i18n-aria="close" aria-label="关闭">×</button>
       <div class="share-card" id="shareCard"></div>
       <div class="share-side">
-        <h3 id="shareTitle">动态分享卡</h3>
-        <p>你的作品会在卡片里自动换装。发朋友圈、小红书，或者直接丢进群里。</p>
+        <h3 id="shareTitle" data-i18n="share.title">动态分享卡</h3>
+        <p data-i18n="share.text">你的作品会在卡片里自动换装。发朋友圈、小红书，或者直接丢进群里。</p>
         <div class="modal-actions">
-          <button class="btn btn-primary" id="copyShare">复制分享文案</button>
-          <button class="btn" disabled title="即将上线">下载 MP4 · 即将上线</button>
+          <button class="btn btn-primary" id="copyShare" data-i18n="share.copy">复制分享文案</button>
+          <button class="btn" disabled data-i18n="share.mp4">下载 MP4 · 即将上线</button>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="dropover" id="dropover" hidden><div><b>松手</b>，看它变漂亮</div></div>
+  <div class="dropover" id="dropover" hidden><div data-i18n="dropover"><b>松手</b>，看它变漂亮</div></div>
   <div class="toast" id="toast" role="status"></div>
   <input type="file" id="file" accept=".pptx,application/vnd.openxmlformats-officedocument.presentationml.presentation" hidden>
 
+  <script src="js/i18n.js"></script>
   <script src="js/data.js"></script>
   <script src="js/render.js"></script>
   <script src="js/pptx.js"></script>

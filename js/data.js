@@ -19,50 +19,50 @@ window.PLAY = window.PLAY || {};
 
   // A style = typography + layout + decoration (see css/slides.css) + default colours.
   P.THEMES = [
-    { id: 'bauhaus', name: '包豪斯', en: 'Bauhaus', colors: { bg: '#F1E7D3', fg: '#191714', a1: '#E3392B', a2: '#1E4FA0', a3: '#F4B400' } },
-    { id: 'swiss', name: '瑞士网格', en: 'Swiss', colors: { bg: '#FFFFFF', fg: '#0F0F0F', a1: '#FF2A12', a2: '#0F0F0F', a3: '#E9E9E9' } },
-    { id: 'memphis', name: '孟菲斯', en: 'Memphis', colors: { bg: '#FFF4E4', fg: '#24124A', a1: '#FF4FA0', a2: '#13C6C2', a3: '#FFCF2E' } },
-    { id: 'editorial', name: '杂志', en: 'Editorial', colors: { bg: '#F2ECE1', fg: '#1D1A16', a1: '#B5381B', a2: '#6D6458', a3: '#DCD2C0' } },
-    { id: 'neon', name: '霓虹', en: 'Neon', colors: { bg: '#0C0820', fg: '#F4EEFF', a1: '#FF2BD6', a2: '#18EEFF', a3: '#7B5CFF' } },
-    { id: 'ink', name: '水墨', en: 'Ink', colors: { bg: '#F0E9DA', fg: '#171513', a1: '#C4321E', a2: '#5E5851', a3: '#DCD2BF' } },
-    { id: 'jelly', name: '果冻', en: 'Y2K Jelly', colors: { bg: '#ECE6FF', fg: '#1D1442', a1: '#FF6EC4', a2: '#5ADFFF', a3: '#C8FF5E' } },
-    { id: 'brutal', name: '野兽派', en: 'Brutal', colors: { bg: '#D7FF3B', fg: '#0A0A0A', a1: '#FF4D00', a2: '#0A0A0A', a3: '#FFFFFF' } },
+    { id: 'bauhaus', name: '包豪斯', en: 'Bauhaus', desc: 'Primary geometry', colors: { bg: '#F1E7D3', fg: '#191714', a1: '#E3392B', a2: '#1E4FA0', a3: '#F4B400' } },
+    { id: 'swiss', name: '瑞士网格', en: 'Swiss', desc: 'Grid and one red', colors: { bg: '#FFFFFF', fg: '#0F0F0F', a1: '#FF2A12', a2: '#0F0F0F', a3: '#E9E9E9' } },
+    { id: 'memphis', name: '孟菲斯', en: 'Memphis', desc: 'Squiggles and dots', colors: { bg: '#FFF4E4', fg: '#24124A', a1: '#FF4FA0', a2: '#13C6C2', a3: '#FFCF2E' } },
+    { id: 'editorial', name: '杂志', en: 'Editorial', desc: 'Serif and rules', colors: { bg: '#F2ECE1', fg: '#1D1A16', a1: '#B5381B', a2: '#6D6458', a3: '#DCD2C0' } },
+    { id: 'neon', name: '霓虹', en: 'Neon', desc: 'Synthwave glow', colors: { bg: '#0C0820', fg: '#F4EEFF', a1: '#FF2BD6', a2: '#18EEFF', a3: '#7B5CFF' } },
+    { id: 'ink', name: '水墨', en: 'Ink', desc: 'Brush and seal', colors: { bg: '#F0E9DA', fg: '#171513', a1: '#C4321E', a2: '#5E5851', a3: '#DCD2BF' } },
+    { id: 'jelly', name: '果冻', en: 'Y2K Jelly', desc: 'Y2K blobs', colors: { bg: '#ECE6FF', fg: '#1D1442', a1: '#FF6EC4', a2: '#5ADFFF', a3: '#C8FF5E' } },
+    { id: 'brutal', name: '野兽派', en: 'Brutal', desc: 'Loud and boxed', colors: { bg: '#D7FF3B', fg: '#0A0A0A', a1: '#FF4D00', a2: '#0A0A0A', a3: '#FFFFFF' } },
   ];
 
   // Play palettes: bg / fg must read well together; a1 is the strongest accent.
   P.PALETTES = [
-    { id: 'tomato', name: '番茄炒蛋', bg: '#FFF3DF', fg: '#2A1508', a1: '#EE3F1B', a2: '#FFBE1A', a3: '#3E7D3A' },
-    { id: 'klein', name: '克莱因蓝', bg: '#F3F2EC', fg: '#0B1030', a1: '#002FA7', a2: '#FFB000', a3: '#C9CCD8' },
-    { id: 'mint', name: '薄荷苏打', bg: '#E4FBF2', fg: '#06393A', a1: '#00A88F', a2: '#FF7A59', a3: '#9EE8D4' },
-    { id: 'morandi', name: '莫兰迪', bg: '#E8E3DC', fg: '#3A3735', a1: '#8E6F6A', a2: '#A3B5A6', a3: '#8E9AAF' },
-    { id: 'palace', name: '故宫红', bg: '#F5ECDB', fg: '#2A1A16', a1: '#A6262B', a2: '#D49B2E', a3: '#2F5755' },
-    { id: 'dopamine', name: '多巴胺', bg: '#FFF7EE', fg: '#1A1A1A', a1: '#FF2E9A', a2: '#22C77F', a3: '#FFD400' },
-    { id: 'izakaya', name: '深夜食堂', bg: '#1B1410', fg: '#F6E8D2', a1: '#FF8A3D', a2: '#E2462B', a3: '#7A5A40' },
-    { id: 'sakura', name: '樱花汽水', bg: '#FFF0F5', fg: '#4A1832', a1: '#F0609A', a2: '#6BB6FF', a3: '#FFD1E0' },
-    { id: 'forest', name: '森林浴', bg: '#ECF1E3', fg: '#1D2C1D', a1: '#3A6B35', a2: '#C79A3A', a3: '#A8C098' },
-    { id: 'lemon', name: '柠檬气泡', bg: '#FFFBD6', fg: '#1E2600', a1: '#0098E0', a2: '#E2EE1E', a3: '#FF5964' },
-    { id: 'sunset', name: '落日飞车', bg: '#2A1A3E', fg: '#FFE8D4', a1: '#FF6B35', a2: '#F7C59F', a3: '#9B5DE5' },
-    { id: 'seasalt', name: '海盐', bg: '#E9F3F7', fg: '#11314A', a1: '#1F7A8C', a2: '#F4A259', a3: '#BFDBF0' },
-    { id: 'blackgold', name: '黑金', bg: '#0F0F11', fg: '#EEE6D3', a1: '#CBA135', a2: '#8A8473', a3: '#2C2C31' },
-    { id: 'cyber', name: '赛博朋克', bg: '#0D0221', fg: '#F6F0FF', a1: '#FF0A8C', a2: '#00EEFF', a3: '#FCEE0A' },
-    { id: 'kraft', name: '牛皮纸', bg: '#E7D7B8', fg: '#2C2317', a1: '#B0502A', a2: '#4A5A3A', a3: '#C9B48A' },
-    { id: 'mono', name: '黑白灰', bg: '#FFFFFF', fg: '#0A0A0A', a1: '#0A0A0A', a2: '#8A8A8A', a3: '#E6E6E6' },
+    { id: 'tomato', name: '番茄炒蛋', en: 'Tomato & Egg', bg: '#FFF3DF', fg: '#2A1508', a1: '#EE3F1B', a2: '#FFBE1A', a3: '#3E7D3A' },
+    { id: 'klein', name: '克莱因蓝', en: 'Klein Blue', bg: '#F3F2EC', fg: '#0B1030', a1: '#002FA7', a2: '#FFB000', a3: '#C9CCD8' },
+    { id: 'mint', name: '薄荷苏打', en: 'Mint Soda', bg: '#E4FBF2', fg: '#06393A', a1: '#00A88F', a2: '#FF7A59', a3: '#9EE8D4' },
+    { id: 'morandi', name: '莫兰迪', en: 'Morandi', bg: '#E8E3DC', fg: '#3A3735', a1: '#8E6F6A', a2: '#A3B5A6', a3: '#8E9AAF' },
+    { id: 'palace', name: '故宫红', en: 'Palace Red', bg: '#F5ECDB', fg: '#2A1A16', a1: '#A6262B', a2: '#D49B2E', a3: '#2F5755' },
+    { id: 'dopamine', name: '多巴胺', en: 'Dopamine', bg: '#FFF7EE', fg: '#1A1A1A', a1: '#FF2E9A', a2: '#22C77F', a3: '#FFD400' },
+    { id: 'izakaya', name: '深夜食堂', en: 'Midnight Diner', bg: '#1B1410', fg: '#F6E8D2', a1: '#FF8A3D', a2: '#E2462B', a3: '#7A5A40' },
+    { id: 'sakura', name: '樱花汽水', en: 'Sakura Soda', bg: '#FFF0F5', fg: '#4A1832', a1: '#F0609A', a2: '#6BB6FF', a3: '#FFD1E0' },
+    { id: 'forest', name: '森林浴', en: 'Forest Bath', bg: '#ECF1E3', fg: '#1D2C1D', a1: '#3A6B35', a2: '#C79A3A', a3: '#A8C098' },
+    { id: 'lemon', name: '柠檬气泡', en: 'Lemon Fizz', bg: '#FFFBD6', fg: '#1E2600', a1: '#0098E0', a2: '#E2EE1E', a3: '#FF5964' },
+    { id: 'sunset', name: '落日飞车', en: 'Sunset Drive', bg: '#2A1A3E', fg: '#FFE8D4', a1: '#FF6B35', a2: '#F7C59F', a3: '#9B5DE5' },
+    { id: 'seasalt', name: '海盐', en: 'Sea Salt', bg: '#E9F3F7', fg: '#11314A', a1: '#1F7A8C', a2: '#F4A259', a3: '#BFDBF0' },
+    { id: 'blackgold', name: '黑金', en: 'Black Gold', bg: '#0F0F11', fg: '#EEE6D3', a1: '#CBA135', a2: '#8A8473', a3: '#2C2C31' },
+    { id: 'cyber', name: '赛博朋克', en: 'Cyberpunk', bg: '#0D0221', fg: '#F6F0FF', a1: '#FF0A8C', a2: '#00EEFF', a3: '#FCEE0A' },
+    { id: 'kraft', name: '牛皮纸', en: 'Kraft Paper', bg: '#E7D7B8', fg: '#2C2317', a1: '#B0502A', a2: '#4A5A3A', a3: '#C9B48A' },
+    { id: 'mono', name: '黑白灰', en: 'Monochrome', bg: '#FFFFFF', fg: '#0A0A0A', a1: '#0A0A0A', a2: '#8A8A8A', a3: '#E6E6E6' },
   ];
 
   // Background textures — drawn in CSS from the slide's own colours.
   P.BGS = [
-    { id: 'none', name: '纯色' },
-    { id: 'dots', name: '波点' },
-    { id: 'grid', name: '方格纸' },
-    { id: 'stripes', name: '斜纹' },
-    { id: 'checker', name: '棋盘' },
-    { id: 'waves', name: '波浪' },
-    { id: 'rings', name: '涟漪' },
-    { id: 'grain', name: '颗粒' },
-    { id: 'halftone', name: '网点' },
-    { id: 'confetti', name: '彩纸屑' },
-    { id: 'mesh', name: '弥散光' },
-    { id: 'sunburst', name: '放射' },
+    { id: 'none', name: '纯色', en: 'Solid' },
+    { id: 'dots', name: '波点', en: 'Dots' },
+    { id: 'grid', name: '方格纸', en: 'Grid' },
+    { id: 'stripes', name: '斜纹', en: 'Stripes' },
+    { id: 'checker', name: '棋盘', en: 'Checker' },
+    { id: 'waves', name: '波浪', en: 'Waves' },
+    { id: 'rings', name: '涟漪', en: 'Ripples' },
+    { id: 'grain', name: '颗粒', en: 'Grain' },
+    { id: 'halftone', name: '网点', en: 'Halftone' },
+    { id: 'confetti', name: '彩纸屑', en: 'Confetti' },
+    { id: 'mesh', name: '弥散光', en: 'Glow' },
+    { id: 'sunburst', name: '放射', en: 'Sunburst' },
   ];
 
   const burst = (n, r1, r2) => {
@@ -83,22 +83,22 @@ window.PLAY = window.PLAY || {};
 
   // Stickers: drawn in currentColor, details pick up the slide's --bg / --fg / --a2 / --a3.
   P.STICKERS = [
-    { id: 'star', name: '星星', svg: '<polygon points="50,4 61,37 96,37 68,58 79,93 50,72 21,93 32,58 4,37 39,37"/>' },
-    { id: 'sparkle', name: '闪光', svg: '<path d="M50 0C54 34 66 46 100 50C66 54 54 66 50 100C46 66 34 54 0 50C34 46 46 34 50 0Z"/>' },
-    { id: 'flower', name: '小花', svg: petals + '<circle cx="50" cy="50" r="15" style="fill:var(--bg)"/>' },
-    { id: 'smiley', name: '笑脸', svg: '<circle cx="50" cy="50" r="46"/><circle cx="35" cy="40" r="6" style="fill:var(--fg)"/><circle cx="65" cy="40" r="6" style="fill:var(--fg)"/><path d="M29 59Q50 82 71 59" fill="none" stroke-width="7" stroke-linecap="round" style="stroke:var(--fg)"/>' },
-    { id: 'burst', name: '爆炸', svg: `<polygon points="${burst(12, 49, 33)}"/>` },
-    { id: 'new', name: 'NEW', svg: `<polygon points="${burst(14, 49, 41)}"/><text x="50" y="59" text-anchor="middle" font-size="24" style="fill:var(--bg);font-family:'Archivo Black','Bricolage Grotesque',sans-serif">NEW</text>` },
-    { id: 'wow', name: '哇', svg: '<path d="M50 6C76 6 94 22 94 44C94 66 76 80 52 80L30 96L34 77C16 71 6 59 6 44C6 22 24 6 50 6Z"/><text x="50" y="56" text-anchor="middle" font-size="32" style="fill:var(--bg);font-family:\'ZCOOL KuaiLe\',\'PingFang SC\',sans-serif">哇!</text>' },
-    { id: 'heart', name: '爱心', svg: '<path d="M50 90C20 66 4 49 4 30C4 15 16 5 29 5C38 5 45 10 50 18C55 10 62 5 71 5C84 5 96 15 96 30C96 49 80 66 50 90Z"/>' },
-    { id: 'arrow', name: '箭头', svg: '<path d="M12 74C26 30 58 18 84 36" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/><path d="M60 30L86 38L80 12" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' },
-    { id: 'squiggle', name: '波浪线', svg: '<path d="M6 54Q16 30 26 54T46 54T66 54T86 54" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>' },
-    { id: 'bolt', name: '闪电', svg: '<polygon points="58,2 16,56 44,56 36,98 84,40 56,40 66,2"/>' },
-    { id: 'asterisk', name: '星号', svg: '<rect x="41" y="4" width="18" height="92" rx="9"/><rect x="41" y="4" width="18" height="92" rx="9" transform="rotate(60 50 50)"/><rect x="41" y="4" width="18" height="92" rx="9" transform="rotate(120 50 50)"/>' },
-    { id: 'crown', name: '皇冠', svg: '<path d="M8 78L14 26L34 50L50 14L66 50L86 26L92 78Z"/><rect x="8" y="83" width="84" height="10" rx="3"/>' },
-    { id: 'eye', name: '眼睛', svg: '<path d="M4 50Q50 4 96 50Q50 96 4 50Z"/><circle cx="50" cy="50" r="19" style="fill:var(--bg)"/><circle cx="50" cy="50" r="10" style="fill:var(--fg)"/>' },
-    { id: 'rainbow', name: '彩虹', svg: '<path d="M8 82A42 42 0 0 1 92 82" fill="none" stroke="currentColor" stroke-width="11"/><path d="M23 82A27 27 0 0 1 77 82" fill="none" stroke-width="11" style="stroke:var(--a2)"/><path d="M38 82A12 12 0 0 1 62 82" fill="none" stroke-width="11" style="stroke:var(--a3)"/>' },
-    { id: 'blob', name: '果冻', svg: '<path d="M71 12C86 22 96 41 90 60C84 79 64 92 44 90C24 88 6 72 8 51C10 30 26 14 44 9C54 6 62 7 71 12Z"/>' },
+    { id: 'star', name: '星星', en: 'Star', svg: '<polygon points="50,4 61,37 96,37 68,58 79,93 50,72 21,93 32,58 4,37 39,37"/>' },
+    { id: 'sparkle', name: '闪光', en: 'Sparkle', svg: '<path d="M50 0C54 34 66 46 100 50C66 54 54 66 50 100C46 66 34 54 0 50C34 46 46 34 50 0Z"/>' },
+    { id: 'flower', name: '小花', en: 'Flower', svg: petals + '<circle cx="50" cy="50" r="15" style="fill:var(--bg)"/>' },
+    { id: 'smiley', name: '笑脸', en: 'Smiley', svg: '<circle cx="50" cy="50" r="46"/><circle cx="35" cy="40" r="6" style="fill:var(--fg)"/><circle cx="65" cy="40" r="6" style="fill:var(--fg)"/><path d="M29 59Q50 82 71 59" fill="none" stroke-width="7" stroke-linecap="round" style="stroke:var(--fg)"/>' },
+    { id: 'burst', name: '爆炸', en: 'Burst', svg: `<polygon points="${burst(12, 49, 33)}"/>` },
+    { id: 'new', name: 'NEW', en: 'NEW', svg: `<polygon points="${burst(14, 49, 41)}"/><text x="50" y="59" text-anchor="middle" font-size="24" style="fill:var(--bg);font-family:'Archivo Black','Bricolage Grotesque',sans-serif">NEW</text>` },
+    { id: 'wow', name: '哇', en: 'Wow', svg: lang => '<path d="M50 6C76 6 94 22 94 44C94 66 76 80 52 80L30 96L34 77C16 71 6 59 6 44C6 22 24 6 50 6Z"/><text x="50" y="56" text-anchor="middle" font-size="32" style="fill:var(--bg);font-family:\'ZCOOL KuaiLe\',\'PingFang SC\',sans-serif">' + (lang === 'en' ? 'WOW!' : '哇!') + '</text>' },
+    { id: 'heart', name: '爱心', en: 'Heart', svg: '<path d="M50 90C20 66 4 49 4 30C4 15 16 5 29 5C38 5 45 10 50 18C55 10 62 5 71 5C84 5 96 15 96 30C96 49 80 66 50 90Z"/>' },
+    { id: 'arrow', name: '箭头', en: 'Arrow', svg: '<path d="M12 74C26 30 58 18 84 36" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/><path d="M60 30L86 38L80 12" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' },
+    { id: 'squiggle', name: '波浪线', en: 'Squiggle', svg: '<path d="M6 54Q16 30 26 54T46 54T66 54T86 54" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/>' },
+    { id: 'bolt', name: '闪电', en: 'Bolt', svg: '<polygon points="58,2 16,56 44,56 36,98 84,40 56,40 66,2"/>' },
+    { id: 'asterisk', name: '星号', en: 'Asterisk', svg: '<rect x="41" y="4" width="18" height="92" rx="9"/><rect x="41" y="4" width="18" height="92" rx="9" transform="rotate(60 50 50)"/><rect x="41" y="4" width="18" height="92" rx="9" transform="rotate(120 50 50)"/>' },
+    { id: 'crown', name: '皇冠', en: 'Crown', svg: '<path d="M8 78L14 26L34 50L50 14L66 50L86 26L92 78Z"/><rect x="8" y="83" width="84" height="10" rx="3"/>' },
+    { id: 'eye', name: '眼睛', en: 'Eye', svg: '<path d="M4 50Q50 4 96 50Q50 96 4 50Z"/><circle cx="50" cy="50" r="19" style="fill:var(--bg)"/><circle cx="50" cy="50" r="10" style="fill:var(--fg)"/>' },
+    { id: 'rainbow', name: '彩虹', en: 'Rainbow', svg: '<path d="M8 82A42 42 0 0 1 92 82" fill="none" stroke="currentColor" stroke-width="11"/><path d="M23 82A27 27 0 0 1 77 82" fill="none" stroke-width="11" style="stroke:var(--a2)"/><path d="M38 82A12 12 0 0 1 62 82" fill="none" stroke-width="11" style="stroke:var(--a3)"/>' },
+    { id: 'blob', name: '果冻', en: 'Blob', svg: '<path d="M71 12C86 22 96 41 90 60C84 79 64 92 44 90C24 88 6 72 8 51C10 30 26 14 44 9C54 6 62 7 71 12Z"/>' },
   ];
 
   /* Slide model
@@ -261,4 +261,139 @@ window.PLAY = window.PLAY || {};
       ['travel', 2, 'memphis', 'dopamine', 'confetti'],
     ],
   ];
+
+  /* ---------------- English content ---------------- */
+
+  P.DEMO_EN = {
+    title: 'What is Play',
+    slides: [
+      { layout: 'cover', kicker: 'Play · 2026', title: 'Don\'t describe. Just play.', sub: 'A design AI you can actually play with: drop in a deck, pick a style, see the result in seconds.', meta: 'Playground Edition' },
+      { layout: 'statement', kicker: 'The idea', title: 'Same content, a whole new life', sub: 'Click to restyle, drag to recolor, slap on a sticker.' },
+      { layout: 'bullets', kicker: 'How to play', title: 'Three steps from dull to done', bullets: ['Upload your deck or pick a template', 'Click the styles, palettes and stickers you like', 'Get the first 3 pages free, instantly'] },
+      { layout: 'stat', kicker: 'Why it\'s different', title: 'From landing to a finished slide', stat: '30 sec', statLabel: 'No prompt to write, no account needed' },
+      { layout: 'quote', quote: 'Design shouldn\'t start with an empty chat box.', author: 'Play design principle #1' },
+      { layout: 'bullets', kicker: 'Library', title: 'A style library that grows', bullets: ['8 styles × 16 palettes × 12 backgrounds', 'What you click and save becomes your taste', 'AI extends your taste into new combos', 'Every result can become a share card'] },
+      { layout: 'end', title: 'Your turn', sub: 'Drop your deck in and try it →' },
+    ],
+  };
+
+  const TEMPLATES_EN = {
+    pitch: {
+      name: 'Pitch deck',
+      deck: {
+        title: 'Shopkeep AI seed pitch',
+        slides: [
+          { layout: 'cover', kicker: 'Seed Round · 2026', title: 'A designer for every corner shop', sub: 'Shopkeep AI · Seed pitch', meta: 'Founder Lin Yi · Nov 2026' },
+          { layout: 'bullets', kicker: 'Problem', title: 'Design is slow and pricey for small shops', bullets: ['One poster takes 3 days and $120', 'Template sites all look the same', 'Owners have no time to learn design tools'] },
+          { layout: 'stat', kicker: 'Market', title: 'Local merchants in China', stat: '120M', statLabel: 'Each needs menus, posters, signage and delivery photos every year' },
+          { layout: 'bullets', kicker: 'Product', title: 'One photo, a full set of materials', bullets: ['Menus, posters and signage in one go', 'Brand colors applied automatically', 'Export for print and delivery apps in one tap'] },
+          { layout: 'stat', kicker: 'Traction', title: 'Six months after launch', stat: '38%', statLabel: 'Month-over-month growth · 11% paid conversion' },
+          { layout: 'quote', quote: 'A poster used to take three days. Now it takes thirty seconds.', author: 'Owner, Afang Noodle House, Hangzhou' },
+          { layout: 'end', title: 'Thank you', sub: 'Raising $4M · let\'s talk' },
+        ],
+      },
+    },
+    annual: {
+      name: 'Year in review',
+      deck: {
+        title: 'Growth team 2026 review',
+        slides: [
+          { layout: 'cover', kicker: '2026 Year in review', title: 'A year on the growth team', sub: 'The numbers, the lessons, and three bets for next year', meta: 'Growth team · December' },
+          { layout: 'stat', kicker: 'Headline', title: 'New users this year', stat: '2.14M', statLabel: '128% of the annual target' },
+          { layout: 'bullets', kicker: 'What worked', title: 'Three things we got right', bullets: ['Cut onboarding to 3 steps', 'Weekly growth experiment reviews', 'A shared ad-creative library with content'] },
+          { layout: 'bullets', kicker: 'What hurt', title: 'Where we stumbled', bullets: ['Leaning on one channel in Q2', 'Underpowered A/B tests', 'Dashboards with clashing definitions'] },
+          { layout: 'statement', kicker: '2027', title: 'Only three bets next year', sub: 'Retention · Referrals · Going global' },
+          { layout: 'end', title: 'Thanks, team', sub: 'Questions?' },
+        ],
+      },
+    },
+    launch: {
+      name: 'Product launch',
+      deck: {
+        title: 'Orbit One launch',
+        slides: [
+          { layout: 'cover', kicker: 'Launch Event', title: 'Orbit One', sub: 'An AI assistant you wear on your ear', meta: 'Dec 8, 2026 · Shanghai' },
+          { layout: 'statement', kicker: 'In one line', title: 'It listens. It thinks.', sub: 'Runs on-device. Nothing you say leaves it.' },
+          { layout: 'stat', kicker: 'Battery', title: 'On a single charge', stat: '36h', statLabel: 'From morning rush hour to lunch the next day' },
+          { layout: 'bullets', kicker: 'New', title: 'Three new superpowers', bullets: ['Live translation in 40 languages', 'Automatic meeting notes', 'Reply to messages by voice while driving'] },
+          { layout: 'stat', kicker: 'Price', title: 'Launch price', stat: '$179', statLabel: 'On sale Dec 8, 8 pm' },
+          { layout: 'end', title: 'See you in orbit', sub: 'Pre-orders are open' },
+        ],
+      },
+    },
+    lesson: {
+      name: 'Lesson slides',
+      deck: {
+        title: 'Photosynthesis · Lesson 4',
+        slides: [
+          { layout: 'cover', kicker: 'Grade 8 Biology · Lesson 4', title: 'Photosynthesis', sub: 'How plants eat, explained in 15 minutes', meta: 'Ms. Wang\'s biology class' },
+          { layout: 'bullets', kicker: 'The basics', title: 'What you need to know', bullets: ['Inputs: carbon dioxide + water', 'Energy: sunlight', 'Outputs: glucose + oxygen'] },
+          { layout: 'stat', kicker: 'Key point', title: 'Remember this equation', stat: '6CO₂+6H₂O', statLabel: '→ C₆H₁₂O₆ + 6O₂ (light, chloroplasts)' },
+          { layout: 'quote', quote: 'A leaf is the plant\'s kitchen, and sunlight is its stove.', author: 'Class analogy' },
+          { layout: 'bullets', kicker: 'Try it', title: 'Homework experiment', bullets: ['Keep a pothos in the dark for 3 days', 'Watch how the leaves change color', 'Write down your hypothesis'] },
+          { layout: 'end', title: 'Class dismissed!', sub: 'Next time: respiration' },
+        ],
+      },
+    },
+    book: {
+      name: 'Book club',
+      deck: {
+        title: 'The Courage to Be Disliked · book club',
+        slides: [
+          { layout: 'cover', kicker: 'Book club · No. 12', title: 'The Courage to Be Disliked', sub: 'Why do we care so much what others think?', meta: 'Hosted by Zhou' },
+          { layout: 'quote', quote: 'Freedom is being disliked by other people.', author: 'Ichiro Kishimi & Fumitake Koga' },
+          { layout: 'bullets', kicker: 'Key ideas', title: 'Three ideas from the book', bullets: ['Separation of tasks', 'Teleology', 'Community feeling'] },
+          { layout: 'statement', kicker: 'Going deeper', title: 'Separation of tasks', sub: 'Know which problems are yours and which belong to someone else' },
+          { layout: 'bullets', kicker: 'Discuss', title: 'Your turn', bullets: ['When did you last worry about what others think?', 'Which of your worries aren\'t actually your task?'] },
+          { layout: 'end', title: 'See you next time', sub: 'Next read: Thinking, Fast and Slow' },
+        ],
+      },
+    },
+    travel: {
+      name: 'Trip recap',
+      deck: {
+        title: 'Seven days in Kyoto',
+        slides: [
+          { layout: 'cover', kicker: 'Trip · Fall 2026', title: 'Seven days in Kyoto', sub: 'Walk slow, eat well', meta: 'With Qing' },
+          { layout: 'stat', kicker: 'By the numbers', title: 'This week we walked', stat: '86,400 steps', statLabel: 'About 12,000 a day' },
+          { layout: 'bullets', kicker: 'Eat', title: 'Must-eat list', bullets: ['Tamagoyaki at Nishiki Market', 'Matcha ice cream by the Kamo River', 'The late-night ramen stall'] },
+          { layout: 'quote', quote: 'On the Philosopher\'s Path, even zoning out feels profound.', author: 'Day 3 journal' },
+          { layout: 'bullets', kicker: 'Next time', title: 'Saving for next time', bullets: ['Kinkaku-ji in winter', 'Feeding the deer in Nara', 'The Arashiyama scenic train'] },
+          { layout: 'end', title: 'またね', sub: 'Next stop: Hokkaido' },
+        ],
+      },
+    },
+    brand: {
+      name: 'Brand proposal',
+      deck: {
+        title: 'Wildpeak Coffee brand proposal',
+        slides: [
+          { layout: 'cover', kicker: 'Brand proposal · v2', title: 'Wildpeak Coffee', sub: 'Turning a cup of coffee into a trip outside', meta: 'Visual direction' },
+          { layout: 'statement', kicker: 'Keywords', title: 'Outdoors · Honest · Warm', sub: 'Three words for the brand' },
+          { layout: 'bullets', kicker: 'Visual system', title: 'Visual system', bullets: ['Colors: sunset orange + pine green', 'Type: chunky serif + handwritten notes', 'Graphics: contour lines and peaks'] },
+          { layout: 'stat', kicker: 'Goal', title: 'By the end of 2027', stat: '120', statLabel: 'stores across 18 cities' },
+          { layout: 'quote', quote: 'Coffee is the excuse. Getting outside is the point.', author: 'Brand promise' },
+          { layout: 'end', title: 'Thank you', sub: 'Let\'s build it together' },
+        ],
+      },
+    },
+    tea: {
+      name: 'Event invite',
+      deck: {
+        title: 'Autumn tea gathering',
+        slides: [
+          { layout: 'cover', kicker: 'Autumn equinox · Gathering', title: 'A Table of Tea', sub: 'Watch autumn arrive with a few good friends', meta: 'Sept 23 · West Lake' },
+          { layout: 'bullets', kicker: 'Program', title: 'The evening', bullets: ['4 pm · Arrive, light incense', '6 pm · Three rounds of tea', '8 pm · Moon viewing and guqin'] },
+          { layout: 'quote', quote: 'Tea can intoxicate, so who needs wine? Books bring fragrance, so who needs flowers?', author: 'Old saying' },
+          { layout: 'bullets', kicker: 'Tea menu', title: 'Tonight\'s teas', bullets: ['Longjing, picked before Qingming', 'Silver Needle white tea', 'Old-bush Shuixian'] },
+          { layout: 'end', title: 'We await you', sub: 'Plain clothes, quiet mind' },
+        ],
+      },
+    },
+  };
+  P.TEMPLATES.forEach(t => { t.en = TEMPLATES_EN[t.id].name; t.deckEn = TEMPLATES_EN[t.id].deck; });
+
+  // content in the current language
+  P.demo = () => (P.lang === 'en' ? P.DEMO_EN : P.DEMO);
+  P.tplDeck = t => (P.lang === 'en' ? t.deckEn : t.deck);
 })(window.PLAY);

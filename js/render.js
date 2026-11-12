@@ -111,11 +111,12 @@
       );
     },
     brutal(l, i) {
-      const tags = ['NEW!', '重点!', 'HOT', '看这里', 'WOW'];
+      const en = P.lang === 'en';
+      const tags = en ? ['NEW!', 'KEY!', 'HOT', 'LOOK', 'WOW'] : ['NEW!', '重点!', 'HOT', '看这里', 'WOW'];
       return (
         D('br-frame', '') +
         D('br-tag', `right:6cqw;top:6cqw;rotate:${i % 2 ? -7 : 8}deg`, tags[i % tags.length]) +
-        D('br-bar', '', '<span>' + 'PLAY ✺ 设计可以玩 ✺ '.repeat(8) + '</span>') +
+        D('br-bar', '', '<span>' + (en ? 'PLAY ✺ DESIGN IS PLAY ✺ ' : 'PLAY ✺ 设计可以玩 ✺ ').repeat(8) + '</span>') +
         (l === 'cover' || l === 'stat' ? D('br-code', 'right:6cqw;bottom:13cqw') : '')
       );
     },
@@ -150,7 +151,7 @@
     end: s => `<h2 class="title ${size(s.title, 5, 10, 18)}">${esc(s.title)}</h2>` + (s.sub ? `<p class="sub">${esc(s.sub)}</p>` : ''),
   };
 
-  P.stickerSVG = def => `<svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">${def.svg}</svg>`;
+  P.stickerSVG = def => `<svg viewBox="0 0 100 100" fill="currentColor" aria-hidden="true">${typeof def.svg === 'function' ? def.svg(P.lang) : def.svg}</svg>`;
 
   P.stickerHTML = (k, n, o) => {
     const def = P.STICKERS.find(s => s.id === k.id);

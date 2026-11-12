@@ -71,7 +71,7 @@
 
   // Map raw text onto Play's layouts.
   function toSlide(raw, i, n) {
-    const title = clip(raw.title || `第 ${i + 1} 页`, 40);
+    const title = clip(raw.title || P.t('pptx.page', i + 1), 40);
     const body = raw.body.filter(b => b !== raw.title).map(b => clip(b, 80));
     if (i === 0) return { layout: 'cover', kicker: '', title, sub: clip(raw.sub || body[0] || '', 70), meta: '' };
     if (i === n - 1 && /谢谢|感谢|thank|q\s*&\s*a|问答|结束|the end/i.test(title)) return { layout: 'end', title, sub: clip(raw.sub || body[0] || '', 60) };
@@ -123,7 +123,7 @@
     const name = file.name.replace(/\.pptx$/i, '');
     if (slides[0]) {
       slides[0].kicker = name;
-      slides[0].meta = `${slides.length} 页 · 由 Play 重新设计`;
+      slides[0].meta = P.t('pptx.meta', slides.length);
     }
     return { title: (slides[0] && slides[0].title) || name, slides };
   };
